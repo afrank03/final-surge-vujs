@@ -1,4 +1,5 @@
-# final-surge-vujs
+# Final Surge Vuejs calendar
+This is raw version of the calendar made in vuejs.
 
 ## Project setup
 ```
@@ -26,6 +27,7 @@ npm run lint
 ```
 
 ### Run your unit tests
+Tests were not added yet due to time constraints
 ```
 npm run test:unit
 ```
