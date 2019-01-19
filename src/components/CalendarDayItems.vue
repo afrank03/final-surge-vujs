@@ -1,6 +1,7 @@
 <template>
   <div>
     <li 
+      @click="removeItem(index)"
       class="c-calendar-day-item" 
       :key="`day-item-${index}`"
       v-for="(color, index) in dayItems"
@@ -18,7 +19,10 @@ export default {
   },
   props: {
     dayItems: Array,
-    date: Number,
+    date: {
+      type: Number,
+      required: true,
+    }
   },
   methods: {
     itemColor(color) {
@@ -29,6 +33,13 @@ export default {
           : '';
 
       return className;
+    },
+    removeItem(index) {
+      let daysItems = this.$store.getters.daysItems;
+      
+      daysItems[`day-${this.date}`].items.splice(index, 1);
+
+      this.$store.dispatch('setDaysItems', daysItems);
     },
   },
 };
@@ -43,6 +54,7 @@ export default {
   height: 5px;
   margin: 2px;
   list-style: none;
+  cursor: pointer;
 
   &--red {
     background: red;

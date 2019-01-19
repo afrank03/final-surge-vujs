@@ -1,19 +1,19 @@
 <template>
   <div class="c-calendar-app">
-    <CalendarHeader headerText="January 2019" />
+    <CalendarHeader :headerText="currentDate" />
     <section class="c-calendar-app__body">
       <article class="c-calendar-app__row">
         <div class="date-container"
-          :key="date.indexOf"
-          v-for="date in thisMonthDates"
+          :key="day.indexOf"
+          v-for="day in thisMonthDates"
         >
           <CalendarDay 
-            :date="date"
-            :weekday="getWeekdayByDate(date)"
+            :day="day"
+            :weekday="getWeekdayByDate(day.date)"
           />
         </div>
-        {{test()}}
       </article>
+      <CalendarButton />
     </section>
   </div>
 </template>
@@ -21,31 +21,65 @@
 <script>
 import CalendarHeader from './CalendarHeader.vue';
 import CalendarDay from './CalendarDay.vue';
+import CalendarButton from './CalendarButton.vue';
 import Month from '../domain/month/Month';
+import availableDayItems from '../config/available-day-items';
 
 export default {
   name: 'CalendarApp',
   components: {
     CalendarHeader,
     CalendarDay,
+    CalendarButton,
   },
   data() {
     return {
-      dates: [],
+      dayItems: [],
     };
+  },
+  mounted() {
+    const dates = Month.getAllCurrentMonthDays();
+    let calendarDays = {};
+    dates.forEach(date => {
+      const oneDay = {
+        [`day-${date}`]: {
+          date,
+          items: this.generateInitialRandomItems(),
+        }
+      };
+      calendarDays = {...calendarDays, ...oneDay}
+    });
+    this.$store.dispatch('setDaysItems', calendarDays);
   },
   computed: {
     thisMonthDates() {
-      return Month.getAllCurrentMonthDays();
-    },
-  },
-  methods: {
-    test() {
       return this.$store.getters.daysItems;
     },
+    currentDate() {
+      const date = new Date();
+      return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+    }
+  },
+  methods: {
     getWeekdayByDate(date) {
       return Month.getWeekdayByDate(date);
     },
+    /**
+     * This most likely should be extracted into a helper class or similar.
+     */
+    generateInitialRandomItems() {
+      const upTo = 10;
+      const amountOfItems = Math.floor((Math.random() * upTo) + 1);
+      let i;
+      let randomItemIndex;
+      let items = [];
+
+      for (i = 0; i < amountOfItems; i++) {
+          randomItemIndex =  Math.floor((Math.random() * 3));
+          items.push(availableDayItems[randomItemIndex]);
+      }
+      return items;
+    }
   },
 };
 </script>

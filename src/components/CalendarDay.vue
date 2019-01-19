@@ -1,9 +1,9 @@
 <template>
   <div class="c-calendar-day">
     <p class="light-text">{{weekday}}</p>
-    <p>{{date}}</p>
-    <ul v-if="dayItems.length > 0">
-      <CalendarDayItems :date="date" :dayItems="dayItems"/>
+    <p>{{day.date}}</p>
+    <ul v-if="day.items.length > 0">
+      <CalendarDayItems :date="day.date" :dayItems="day.items" />
     </ul>
   </div>
 </template>
@@ -11,42 +11,15 @@
 <script>
 import CalendarDayItems from './CalendarDayItems';
 import { SET_DAYS_ITEMS } from '../store/mutation-types';
-import { constants } from 'http2';
-
-const availableItems = ['red', 'blue', 'green'];
 
 export default {
   name: 'CalendarDay',
-  data() {
-    return {
-      dayItems: [],
-    };
-  },
   components: {
     CalendarDayItems,
   },
-  mounted() {
-    this.generateInitialRandomItems();
-  },
   props: {
-    date: Number,
+    day: {},
     weekday: String,
-  },
-  methods: {
-    /**
-     * This most likely should be extracted into a helper class or similar.
-     */
-    generateInitialRandomItems() {
-      const upTo = 10;
-      const amountOfItems = Math.floor((Math.random() * upTo) + 1);
-      let i;
-      let randomItemIndex;
-
-      for (i = 0; i < amountOfItems; i++) {
-          randomItemIndex =  Math.floor((Math.random() * 3));
-          this.dayItems.push(availableItems[randomItemIndex]);
-      }
-    }
   },
 };
 </script>

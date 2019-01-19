@@ -13,7 +13,7 @@ class Month {
    * @returns {Array} Of all days
    */
   getAllCurrentMonthDays() {
-    const lastDayOfTheMonth = this._getLastDate();
+    const lastDayOfTheMonth = this.getLastDate();
 
     let i;
     for (i = 1; i <= lastDayOfTheMonth; i++) {
@@ -43,7 +43,7 @@ class Month {
    *
    * @returns {Number}
    */
-  _getLastDate() {
+  getLastDate() {
     const date = 0;
     const lastDay = new Date(
       this.currentYear,

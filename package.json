@@ -9,7 +9,6 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "http2": "^3.3.7",
     "vue": "^2.5.21",
     "vuex": "^3.0.1"
   },
