@@ -9,6 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "http2": "^3.3.7",
     "vue": "^2.5.21",
     "vuex": "^3.0.1"
   },
@@ -38,8 +39,18 @@
       "@vue/airbnb"
     ],
     "rules": {
-      "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-      "no-underscore-dangle": ["error", { "allowAfterThis": true }]
+      "no-plusplus": [
+        "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
+      "no-underscore-dangle": [
+        "error",
+        {
+          "allowAfterThis": true
+        }
+      ]
     },
     "parserOptions": {
       "parser": "babel-eslint"

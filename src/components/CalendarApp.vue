@@ -12,6 +12,7 @@
             :weekday="getWeekdayByDate(date)"
           />
         </div>
+        {{test()}}
       </article>
     </section>
   </div>
@@ -39,6 +40,9 @@ export default {
     },
   },
   methods: {
+    test() {
+      return this.$store.getters.daysItems;
+    },
     getWeekdayByDate(date) {
       return Month.getWeekdayByDate(date);
     },

@@ -6,7 +6,14 @@ import mutations from './mutations';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    daysItems: {},
+  },
+  getters: {
+    daysItems(state) {
+      return state.daysItems;
+    },
+  },
   mutations,
   actions,
 });
