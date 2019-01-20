@@ -3,11 +3,12 @@
     <CalendarHeader :headerText="currentDate" />
     <section class="c-calendar-app__body">
       <article class="c-calendar-app__row">
-        <div class="date-container"
+        <div
+          class="date-container"
           :key="day.indexOf"
           v-for="day in thisMonthDates"
         >
-          <CalendarDay 
+          <CalendarDay
             :day="day"
             :weekday="getWeekdayByDate(day.date)"
           />
@@ -23,10 +24,13 @@ import CalendarHeader from './CalendarHeader.vue';
 import CalendarDay from './CalendarDay.vue';
 import CalendarButton from './CalendarButton.vue';
 import Month from '../domain/month/Month';
-import availableDayItems from '../config/available-day-items';
+import itemsGenerator from '../mixins/item-generator';
 
 export default {
   name: 'CalendarApp',
+  mixins: [
+    itemsGenerator,
+  ],
   components: {
     CalendarHeader,
     CalendarDay,
@@ -40,15 +44,15 @@ export default {
   mounted() {
     const dates = Month.getAllCurrentMonthDays();
     let calendarDays = {};
-    dates.forEach(date => {
+    dates.forEach(((date) => {
       const oneDay = {
         [`day-${date}`]: {
           date,
-          items: this.generateInitialRandomItems(),
-        }
+          items: this.generateRandomItems(),
+        },
       };
-      calendarDays = {...calendarDays, ...oneDay}
-    });
+      calendarDays = { ...calendarDays, ...oneDay };
+    }));
     this.$store.dispatch('setDaysItems', calendarDays);
   },
   computed: {
@@ -58,34 +62,18 @@ export default {
     currentDate() {
       const date = new Date();
       return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-    }
+    },
   },
   methods: {
     getWeekdayByDate(date) {
       return Month.getWeekdayByDate(date);
     },
-    /**
-     * This most likely should be extracted into a helper class or similar.
-     */
-    generateInitialRandomItems() {
-      const upTo = 10;
-      const amountOfItems = Math.floor((Math.random() * upTo) + 1);
-      let i;
-      let randomItemIndex;
-      let items = [];
-
-      for (i = 0; i < amountOfItems; i++) {
-          randomItemIndex =  Math.floor((Math.random() * 3));
-          items.push(availableDayItems[randomItemIndex]);
-      }
-      return items;
-    }
   },
 };
 </script>
 
 <style scoped lang="scss">
-@import './../scss/colors';
+@import "./../scss/colors";
 
 .c-calendar-app {
   background: $color-light-grey;

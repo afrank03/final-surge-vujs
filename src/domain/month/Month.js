@@ -28,11 +28,7 @@ class Month {
    * @return {String} Weekday name
    */
   getWeekdayByDate(date) {
-    const dayNumber = new Date(
-      this.currentYear,
-      this.currentMonth,
-      date,
-    );
+    const dayNumber = new Date(this.currentYear, this.currentMonth, date);
 
     return Weekdays[dayNumber.getDay()];
   }
@@ -45,11 +41,7 @@ class Month {
    */
   getLastDate() {
     const date = 0;
-    const lastDay = new Date(
-      this.currentYear,
-      this.currentMonth + 1,
-      date,
-    );
+    const lastDay = new Date(this.currentYear, this.currentMonth + 1, date);
 
     return lastDay.getDate();
   }

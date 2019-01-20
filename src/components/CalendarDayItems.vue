@@ -1,8 +1,8 @@
 <template>
   <div>
-    <li 
+    <li
       @click="removeItem(index)"
-      class="c-calendar-day-item" 
+      class="c-calendar-day-item"
       :key="`day-item-${index}`"
       v-for="(color, index) in dayItems"
       v-bind:class="itemColor(color)"
@@ -14,29 +14,29 @@
 export default {
   name: 'CalendarDayItems',
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     dayItems: Array,
     date: {
       type: Number,
       required: true,
-    }
+    },
   },
   methods: {
     itemColor(color) {
       const validColors = ['red', 'green', 'blue'];
 
-        const className = validColors.includes(color) 
-          ? `c-calendar-day-item--${color}` 
-          : '';
+      const className = validColors.includes(color)
+        ? `c-calendar-day-item--${color}`
+        : '';
 
       return className;
     },
     removeItem(index) {
-      let daysItems = this.$store.getters.daysItems;
-      
+      let daysItems;
+      daysItems = this.$store.getters.daysItems;
+
       daysItems[`day-${this.date}`].items.splice(index, 1);
 
       this.$store.dispatch('setDaysItems', daysItems);
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import './../scss/colors';
+@import "./../scss/colors";
 
 .c-calendar-day-item {
   display: inline-block;

@@ -3,14 +3,16 @@
     <p class="light-text">{{weekday}}</p>
     <p>{{day.date}}</p>
     <ul v-if="day.items.length > 0">
-      <CalendarDayItems :date="day.date" :dayItems="day.items" />
+      <CalendarDayItems
+        :date="day.date"
+        :dayItems="day.items"
+      />
     </ul>
   </div>
 </template>
 
 <script>
-import CalendarDayItems from './CalendarDayItems';
-import { SET_DAYS_ITEMS } from '../store/mutation-types';
+import CalendarDayItems from './CalendarDayItems.vue';
 
 export default {
   name: 'CalendarDay',
@@ -25,7 +27,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import './../scss/colors';
+@import "./../scss/colors";
 
 .c-calendar-day {
   width: 100px;
