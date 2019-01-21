@@ -2,14 +2,21 @@
   <div class="c-calendar-app">
     <CalendarHeader :headerText="currentDate" />
     <section class="c-calendar-app__body">
-      <article class="c-calendar-app__row">
-        <div class="date-container"
-          :key="day.indexOf"
-          v-for="day in thisMonthDates"
+      <WeekDays />
+      <article
+        :key="`week-${weekIndex}`"
+        v-for="(week, weekIndex) in thisMonthDatesWeeks"
+        class="c-calendar-app__row"
+      >
+        <div
+          class="date-container"
+          :key="`day-${dayIndex}`"
+          v-for="(day, dayIndex) in week"
         >
-          <CalendarDay 
+          <CalendarDay
             :day="day"
-            :weekday="getWeekdayByDate(day.date)"
+            :weekIndex="weekIndex"
+            :dayIndex="dayIndex"
           />
         </div>
       </article>
@@ -22,83 +29,72 @@
 import CalendarHeader from './CalendarHeader.vue';
 import CalendarDay from './CalendarDay.vue';
 import CalendarButton from './CalendarButton.vue';
+import WeekDays from './WeekDays.vue';
 import Month from '../domain/month/Month';
-import availableDayItems from '../config/available-day-items';
+import ItemsGenerator from '../mixins/item-generator';
 
 export default {
   name: 'CalendarApp',
+  mixins: [
+    ItemsGenerator,
+  ],
   components: {
     CalendarHeader,
     CalendarDay,
     CalendarButton,
-  },
-  data() {
-    return {
-      dayItems: [],
-    };
+    WeekDays,
   },
   mounted() {
-    const dates = Month.getAllCurrentMonthDays();
-    let calendarDays = {};
-    dates.forEach(date => {
-      const oneDay = {
-        [`day-${date}`]: {
-          date,
-          items: this.generateInitialRandomItems(),
+    const currentMonthWeeks = Month.getMonthSplitByWeeks(true);
+
+    currentMonthWeeks.forEach(((week) => {
+      week.forEach(((day) => {
+        if (day.items !== undefined) {
+          const items = this.generateRandomItems();
+          items.forEach((item) => {
+            day.items.push(item);
+          });
         }
-      };
-      calendarDays = {...calendarDays, ...oneDay}
-    });
-    this.$store.dispatch('setDaysItems', calendarDays);
+      }));
+    }));
+
+    this.$store.dispatch('setDaysItems', currentMonthWeeks);
   },
   computed: {
-    thisMonthDates() {
+    thisMonthDatesWeeks() {
       return this.$store.getters.daysItems;
     },
     currentDate() {
       const date = new Date();
       return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-    }
+    },
   },
   methods: {
     getWeekdayByDate(date) {
       return Month.getWeekdayByDate(date);
     },
-    /**
-     * This most likely should be extracted into a helper class or similar.
-     */
-    generateInitialRandomItems() {
-      const upTo = 10;
-      const amountOfItems = Math.floor((Math.random() * upTo) + 1);
-      let i;
-      let randomItemIndex;
-      let items = [];
-
-      for (i = 0; i < amountOfItems; i++) {
-          randomItemIndex =  Math.floor((Math.random() * 3));
-          items.push(availableDayItems[randomItemIndex]);
-      }
-      return items;
-    }
   },
 };
 </script>
 
 <style scoped lang="scss">
-@import './../scss/colors';
-
-.c-calendar-app {
+@import "./../scss/colors";
+@import "./../scss/main";
+.date-container--shade {
   background: $color-light-grey;
+}
+.c-calendar-app {
+  height: 100%;
   padding: 5px;
 
   &__body {
-    height: 100%;
     padding: 10px;
-    border: 1px solid $color-grey;
+    border-top: 1px solid $color-grey;
   }
 
   &__row {
     display: inline-flex;
+    justify-content: center;
     flex-wrap: wrap;
     flex-direction: row;
     width: 100%;

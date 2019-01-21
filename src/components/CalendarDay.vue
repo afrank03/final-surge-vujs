@@ -1,31 +1,54 @@
 <template>
-  <div class="c-calendar-day">
-    <p class="light-text">{{weekday}}</p>
+  <div
+    class="c-calendar-day"
+    v-bind:class="[ !isThisMonthDate ? otherMonthDayClass : '', isCurrentDate ? currentDate : '' ]"
+  >
     <p>{{day.date}}</p>
-    <ul v-if="day.items.length > 0">
-      <CalendarDayItems :date="day.date" :dayItems="day.items" />
+    <ul v-if="day.items != undefined">
+      <CalendarDayItems
+        :date="day.date"
+        :weekIndex="weekIndex"
+        :dayIndex="dayIndex"
+        :dayItems="day.items"
+      />
     </ul>
   </div>
 </template>
 
 <script>
-import CalendarDayItems from './CalendarDayItems';
-import { SET_DAYS_ITEMS } from '../store/mutation-types';
+import CalendarDayItems from './CalendarDayItems.vue';
+import Month from '../domain/month/Month';
 
 export default {
   name: 'CalendarDay',
+  data() {
+    return {
+      otherMonthDayClass: 'other-month-day',
+      currentDate: 'c-calendar-day--current',
+    };
+  },
   components: {
     CalendarDayItems,
   },
   props: {
     day: {},
-    weekday: String,
+    weekIndex: Number,
+    dayIndex: Number,
+  },
+  computed: {
+    isThisMonthDate() {
+      return this.day.date !== undefined;
+    },
+    isCurrentDate() {
+      const d = new Date();
+      return this.day.date === d.getDate();
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-@import './../scss/colors';
+@import "./../scss/colors";
 
 .c-calendar-day {
   width: 100px;
@@ -33,22 +56,31 @@ export default {
   position: relative;
   margin: 5px;
   border: 1px solid $color-grey;
+  border-radius: 5px;
+  background: $color-lighter-grey;
   overflow: hidden;
 
-  .light-text {
-    color: $color-grey-darker;
+  &--current {
+    border: 2px solid $color-grey-darker;
   }
 
   p {
-    line-height: 5px;
+    line-height: 20px;
+    font-weight: 600;
+    color: $color-grey-darker;
   }
 
   ul {
     position: absolute;
     top: 30px;
     left: 0px;
-    padding: 0;
+    padding: 5px;
     text-align: left;
   }
+}
+
+.other-month-day {
+  border: none;
+  background: $color-lighter-grey;
 }
 </style>

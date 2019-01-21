@@ -1,11 +1,11 @@
 <template>
   <div>
-    <li 
+    <li
       @click="removeItem(index)"
-      class="c-calendar-day-item" 
+      class="c-calendar-day-item"
       :key="`day-item-${index}`"
       v-for="(color, index) in dayItems"
-      v-bind:class="itemColor(color)"
+      v-bind:class="getItemColor(color)"
     ></li>
   </div>
 </template>
@@ -13,45 +13,45 @@
 <script>
 export default {
   name: 'CalendarDayItems',
-  data() {
-    return {
-    };
-  },
   props: {
     dayItems: Array,
+    weekIndex: Number,
+    dayIndex: Number,
     date: {
       type: Number,
       required: true,
-    }
+    },
   },
   methods: {
-    itemColor(color) {
+    getItemColor(color) {
       const validColors = ['red', 'green', 'blue'];
 
-        const className = validColors.includes(color) 
-          ? `c-calendar-day-item--${color}` 
-          : '';
+      const className = validColors.includes(color)
+        ? `c-calendar-day-item--${color}`
+        : '';
 
       return className;
     },
     removeItem(index) {
-      let daysItems = this.$store.getters.daysItems;
-      
-      daysItems[`day-${this.date}`].items.splice(index, 1);
+      let monthWeeks;
+      monthWeeks = this.$store.getters.daysItems;
 
-      this.$store.dispatch('setDaysItems', daysItems);
+      monthWeeks[this.weekIndex][this.dayIndex].items.splice(index, 1);
+
+      this.$store.dispatch('setDaysItems', monthWeeks);
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
-@import './../scss/colors';
+@import "./../scss/colors";
 
 .c-calendar-day-item {
   display: inline-block;
   width: 10px;
-  height: 5px;
+  height: 10px;
+  border-radius: 50px;
   margin: 2px;
   list-style: none;
   cursor: pointer;
