@@ -50,7 +50,8 @@ export default {
 .c-calendar-day-item {
   display: inline-block;
   width: 10px;
-  height: 5px;
+  height: 10px;
+  border-radius: 50px;
   margin: 2px;
   list-style: none;
   cursor: pointer;

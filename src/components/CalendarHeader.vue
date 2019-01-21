@@ -1,6 +1,6 @@
 <template>
   <header>
-    {{headerText}}
+    <h2><span class="light-text">Today is</span> {{ headerText }}</h2>
   </header>
 </template>
 
@@ -14,4 +14,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "./../scss/colors";
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+.light-text {
+  color: $color-grey-darker;
+}
 </style>

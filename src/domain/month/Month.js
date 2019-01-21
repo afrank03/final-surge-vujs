@@ -2,7 +2,6 @@ import Weekdays from './Weekdays';
 
 class Month {
   constructor() {
-    this.days = [];
     this.currentDate = new Date();
     this.currentYear = this.currentDate.getFullYear();
     this.currentMonth = this.currentDate.getMonth();
@@ -15,12 +14,15 @@ class Month {
   getAllCurrentMonthDays() {
     const lastDayOfTheMonth = this.getLastDate();
 
+    let days;
     let i;
+    days = [];
+
     for (i = 1; i <= lastDayOfTheMonth; i++) {
-      this.days.push(i);
+      days.push(i);
     }
 
-    return this.days;
+    return days;
   }
 
   /**
@@ -31,6 +33,17 @@ class Month {
     const dayNumber = new Date(this.currentYear, this.currentMonth, date);
 
     return Weekdays[dayNumber.getDay()];
+  }
+
+  getWeekDays(mondayFirst = false) {
+    let weekDays;
+
+    weekDays = Weekdays;
+
+    if (mondayFirst) {
+      weekDays.push(weekDays.shift());
+    }
+    return weekDays;
   }
 
   /**

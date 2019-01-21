@@ -2,6 +2,7 @@
   <div class="c-calendar-app">
     <CalendarHeader :headerText="currentDate" />
     <section class="c-calendar-app__body">
+      <WeekDays />
       <article
         :key="`week-${weekIndex}`"
         v-for="(week, weekIndex) in thisMonthDatesWeeks"
@@ -28,6 +29,7 @@
 import CalendarHeader from './CalendarHeader.vue';
 import CalendarDay from './CalendarDay.vue';
 import CalendarButton from './CalendarButton.vue';
+import WeekDays from './WeekDays.vue';
 import Month from '../domain/month/Month';
 import ItemsGenerator from '../mixins/item-generator';
 
@@ -40,6 +42,7 @@ export default {
     CalendarHeader,
     CalendarDay,
     CalendarButton,
+    WeekDays,
   },
   mounted() {
     const currentMonthWeeks = Month.getMonthSplitByWeeks(true);
@@ -76,21 +79,22 @@ export default {
 
 <style scoped lang="scss">
 @import "./../scss/colors";
+@import "./../scss/main";
 .date-container--shade {
   background: $color-light-grey;
 }
 .c-calendar-app {
-  background: $color-light-grey;
+  height: 100%;
   padding: 5px;
 
   &__body {
-    height: 100%;
     padding: 10px;
-    border: 1px solid $color-grey;
+    border-top: 1px solid $color-grey;
   }
 
   &__row {
     display: inline-flex;
+    justify-content: center;
     flex-wrap: wrap;
     flex-direction: row;
     width: 100%;

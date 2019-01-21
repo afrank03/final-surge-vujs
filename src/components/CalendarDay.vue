@@ -1,6 +1,8 @@
 <template>
-  <div class="c-calendar-day">
-    <p class="light-text">{{weekday}}</p>
+  <div
+    class="c-calendar-day"
+    v-bind:class="[ !isThisMonthDate ? otherMonthDayClass : '', isCurrentDate ? currentDate : '' ]"
+  >
     <p>{{day.date}}</p>
     <ul v-if="day.items != undefined">
       <CalendarDayItems
@@ -19,6 +21,12 @@ import Month from '../domain/month/Month';
 
 export default {
   name: 'CalendarDay',
+  data() {
+    return {
+      otherMonthDayClass: 'other-month-day',
+      currentDate: 'c-calendar-day--current',
+    };
+  },
   components: {
     CalendarDayItems,
   },
@@ -28,8 +36,12 @@ export default {
     dayIndex: Number,
   },
   computed: {
-    weekday() {
-      return Month.getWeekdayByDate(this.day.date);
+    isThisMonthDate() {
+      return this.day.date !== undefined;
+    },
+    isCurrentDate() {
+      const d = new Date();
+      return this.day.date === d.getDate();
     },
   },
 };
@@ -44,22 +56,31 @@ export default {
   position: relative;
   margin: 5px;
   border: 1px solid $color-grey;
+  border-radius: 5px;
+  background: $color-lighter-grey;
   overflow: hidden;
 
-  .light-text {
-    color: $color-grey-darker;
+  &--current {
+    border: 2px solid $color-grey-darker;
   }
 
   p {
-    line-height: 5px;
+    line-height: 20px;
+    font-weight: 600;
+    color: $color-grey-darker;
   }
 
   ul {
     position: absolute;
     top: 30px;
     left: 0px;
-    padding: 0;
+    padding: 5px;
     text-align: left;
   }
+}
+
+.other-month-day {
+  border: none;
+  background: $color-lighter-grey;
 }
 </style>
