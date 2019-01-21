@@ -5,7 +5,7 @@
       class="c-calendar-day-item"
       :key="`day-item-${index}`"
       v-for="(color, index) in dayItems"
-      v-bind:class="itemColor(color)"
+      v-bind:class="getItemColor(color)"
     ></li>
   </div>
 </template>
@@ -13,18 +13,17 @@
 <script>
 export default {
   name: 'CalendarDayItems',
-  data() {
-    return {};
-  },
   props: {
     dayItems: Array,
+    weekIndex: Number,
+    dayIndex: Number,
     date: {
       type: Number,
       required: true,
     },
   },
   methods: {
-    itemColor(color) {
+    getItemColor(color) {
       const validColors = ['red', 'green', 'blue'];
 
       const className = validColors.includes(color)
@@ -34,12 +33,12 @@ export default {
       return className;
     },
     removeItem(index) {
-      let daysItems;
-      daysItems = this.$store.getters.daysItems;
+      let monthWeeks;
+      monthWeeks = this.$store.getters.daysItems;
 
-      daysItems[`day-${this.date}`].items.splice(index, 1);
+      monthWeeks[this.weekIndex][this.dayIndex].items.splice(index, 1);
 
-      this.$store.dispatch('setDaysItems', daysItems);
+      this.$store.dispatch('setDaysItems', monthWeeks);
     },
   },
 };

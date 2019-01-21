@@ -2,9 +2,11 @@
   <div class="c-calendar-day">
     <p class="light-text">{{weekday}}</p>
     <p>{{day.date}}</p>
-    <ul v-if="day.items.length > 0">
+    <ul v-if="day.items != undefined">
       <CalendarDayItems
         :date="day.date"
+        :weekIndex="weekIndex"
+        :dayIndex="dayIndex"
         :dayItems="day.items"
       />
     </ul>
@@ -13,6 +15,7 @@
 
 <script>
 import CalendarDayItems from './CalendarDayItems.vue';
+import Month from '../domain/month/Month';
 
 export default {
   name: 'CalendarDay',
@@ -21,7 +24,13 @@ export default {
   },
   props: {
     day: {},
-    weekday: String,
+    weekIndex: Number,
+    dayIndex: Number,
+  },
+  computed: {
+    weekday() {
+      return Month.getWeekdayByDate(this.day.date);
+    },
   },
 };
 </script>

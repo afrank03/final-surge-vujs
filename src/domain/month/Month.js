@@ -34,6 +34,44 @@ class Month {
   }
 
   /**
+   * @returns {Array} Current month split by weeks
+   */
+  getMonthSplitByWeeks(mondayFirst = false) {
+    let iterationWeek;
+
+    const daysInWeek = 7;
+    const d = new Date();
+    const currentMonthDates = this.getAllCurrentMonthDays();
+    // Sun, Mon, Tue, Wed, Thu, Fri, Sat
+    let monthInWeeks;
+    monthInWeeks = [
+      [{}, {}, {}, {}, {}, {}, {}],
+      [{}, {}, {}, {}, {}, {}, {}],
+      [{}, {}, {}, {}, {}, {}, {}],
+      [{}, {}, {}, {}, {}, {}, {}],
+      [{}, {}, {}, {}, {}, {}, {}],
+    ];
+
+    currentMonthDates.forEach((date) => {
+      const dayNumber = new Date(d.getFullYear(), d.getMonth(), date);
+
+      iterationWeek = Math.floor(date / daysInWeek);
+      monthInWeeks[iterationWeek][dayNumber.getDay()] = {
+        date,
+        items: [],
+      };
+    });
+
+    if (mondayFirst) {
+      monthInWeeks.forEach((week) => {
+        week.push(week.shift());
+      });
+    }
+
+    return monthInWeeks;
+  }
+
+  /**
    * Private method
    * Getting last date of the month
    *

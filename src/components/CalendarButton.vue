@@ -7,20 +7,22 @@
 </template>
 
 <script>
-import itemsGenerator from '../mixins/item-generator';
+import ItemsGenerator from '../mixins/item-generator';
 import Month from '../domain/month/Month';
 
 export default {
   name: 'CalendarButton',
-  mixins: [itemsGenerator],
+  mixins: [ItemsGenerator],
   methods: {
     generateRandomItemForRandomDate() {
-      const randomDate = Math.floor(Math.random() * Month.getLastDate() + 1);
-      let daysItems;
+      const numberOfWeeks = 4;
+      const numberOfDays = 6; // starts from 0
+      const randomWeek = Math.floor(Math.random() * numberOfWeeks);
+      const randomDay = Math.floor(Math.random() * numberOfDays);
 
-      daysItems = this.$store.getters.daysItems;
+      const daysItems = this.$store.getters.daysItems;
 
-      daysItems[`day-${randomDate}`].items = this.generateRandomItems();
+      daysItems[randomWeek][randomDay].items = this.generateRandomItems();
 
       this.$store.dispatch('setDaysItems', daysItems);
     },

@@ -2,15 +2,20 @@
   <div class="c-calendar-app">
     <CalendarHeader :headerText="currentDate" />
     <section class="c-calendar-app__body">
-      <article class="c-calendar-app__row">
+      <article
+        :key="`week-${weekIndex}`"
+        v-for="(week, weekIndex) in thisMonthDatesWeeks"
+        class="c-calendar-app__row"
+      >
         <div
           class="date-container"
-          :key="day.indexOf"
-          v-for="day in thisMonthDates"
+          :key="`day-${dayIndex}`"
+          v-for="(day, dayIndex) in week"
         >
           <CalendarDay
             :day="day"
-            :weekday="getWeekdayByDate(day.date)"
+            :weekIndex="weekIndex"
+            :dayIndex="dayIndex"
           />
         </div>
       </article>
@@ -24,39 +29,36 @@ import CalendarHeader from './CalendarHeader.vue';
 import CalendarDay from './CalendarDay.vue';
 import CalendarButton from './CalendarButton.vue';
 import Month from '../domain/month/Month';
-import itemsGenerator from '../mixins/item-generator';
+import ItemsGenerator from '../mixins/item-generator';
 
 export default {
   name: 'CalendarApp',
   mixins: [
-    itemsGenerator,
+    ItemsGenerator,
   ],
   components: {
     CalendarHeader,
     CalendarDay,
     CalendarButton,
   },
-  data() {
-    return {
-      dayItems: [],
-    };
-  },
   mounted() {
-    const dates = Month.getAllCurrentMonthDays();
-    let calendarDays = {};
-    dates.forEach(((date) => {
-      const oneDay = {
-        [`day-${date}`]: {
-          date,
-          items: this.generateRandomItems(),
-        },
-      };
-      calendarDays = { ...calendarDays, ...oneDay };
+    const currentMonthWeeks = Month.getMonthSplitByWeeks(true);
+
+    currentMonthWeeks.forEach(((week) => {
+      week.forEach(((day) => {
+        if (day.items !== undefined) {
+          const items = this.generateRandomItems();
+          items.forEach((item) => {
+            day.items.push(item);
+          });
+        }
+      }));
     }));
-    this.$store.dispatch('setDaysItems', calendarDays);
+
+    this.$store.dispatch('setDaysItems', currentMonthWeeks);
   },
   computed: {
-    thisMonthDates() {
+    thisMonthDatesWeeks() {
       return this.$store.getters.daysItems;
     },
     currentDate() {
@@ -74,7 +76,9 @@ export default {
 
 <style scoped lang="scss">
 @import "./../scss/colors";
-
+.date-container--shade {
+  background: $color-light-grey;
+}
 .c-calendar-app {
   background: $color-light-grey;
   padding: 5px;
